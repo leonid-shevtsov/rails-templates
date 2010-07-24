@@ -5,15 +5,18 @@
 # gems
 
 gem 'haml', '>= 3'
+# haml template generator
+git :clone => 'git://github.com/psynix/rails3_haml_scaffold_generator.git lib/generators/haml'
+
 gem 'compass'
 gem 'compass-susy-plugin', :require => 'susy'
+
 gem 'authlogic'
 
 # gem 'will_paginate'
 plugin 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
 
-# gem 'formtastic'
-plugin 'formtastic', :git => 'git://github.com/justinfrench/formtastic.git', :branch => 'rails3'
+gem 'formtastic-rails3', :require => 'formtastic'
 
 gem 'exceptional'
 
@@ -91,6 +94,16 @@ run 'mkdir public/stylesheets/sass'
 # include compass with susy
 run 'compass init rails . -r susy -u susy --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
 
+# include formtastic for susy
+run 'wget http://github.com/leonid-shevtsov/formtastic-susy/raw/master/_formtastic.scss -O public/stylesheets/sass/_formtastic.scss'
+File.open('public/stylesheets/sass/_base.scss','a') do |file|
+  file.puts
+  file.puts '@import "formtastic";'
+  file.puts 'form.formtastic {'
+  file.puts '  @include formtastic;'
+  file.puts '}'
+end
+
 
 # download jquery into javascripts; set up javascript defaults to use jquery
 
@@ -106,6 +119,19 @@ end
 ActionView::Helpers::AssetTagHelper::JAVASCRIPT_DEFAULT_SOURCES = ['jquery-1.4.2', 'rails']
 ActionView::Helpers::AssetTagHelper::reset_javascript_include_default
 FILE
+
+# redefine default generators
+file 'config/initializers/generators_defaults.rb', <<-FILE
+module #{@app_name.classify}
+  class Application
+    config.generators do |generator|
+      generator.test_framework :rspec
+      generator.template_engine :haml
+    end
+  end
+end
+FILE
+
 
 # set up environment
 
