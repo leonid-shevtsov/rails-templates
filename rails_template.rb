@@ -16,6 +16,9 @@ gem 'authlogic'
 # gem 'will_paginate'
 plugin 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
 
+# bleeding edge to support rails 3
+gem 'enumerated_attribute', :git => 'git://github.com/jeffp/enumerated_attribute.git'
+
 gem 'formtastic-rails3', :require => 'formtastic'
 
 gem 'exceptional'
@@ -42,6 +45,8 @@ run 'rm app/views/layouts/application.html.erb'
 # ignore compiled stylesheets
 File.open('.gitignore','a') do |file|
   file.puts 'public/stylesheets/*.css'
+  file.puts 'tmp/*'
+  file.puts 'config/database.yml'
 end
 
 # database configuration
@@ -135,7 +140,7 @@ FILE
 
 # set up environment
 
-run 'bundle install'
+run 'bundle install .'
 rake 'db:create'
 
 # prepare a stub controller and view
