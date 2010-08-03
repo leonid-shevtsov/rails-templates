@@ -32,6 +32,13 @@ if yes?('Include the Russian gem?')
   gem 'russian'
 end
 
+# config.ru
+config_ru = File.read('config.ru')
+File.open('config.ru', 'w') do |f|
+  f.puts "require 'etc'\nENV['RAILS_ENV'] = ENV['RACK_ENV']  if !ENV['RAILS_ENV'] && ENV['RACK_ENV']\nENV['BUNDLER_HOME'] = Etc.getpwuid.dir\n\n"
+  f.puts config_ru
+end
+
 # a little cleanup
 
 run 'rm public/index.html'
@@ -140,7 +147,7 @@ FILE
 
 # set up environment
 
-run 'bundle install .'
+run 'bundle install'
 rake 'db:create'
 
 # prepare a stub controller and view
