@@ -87,7 +87,8 @@ file 'app/views/layouts/application.haml', <<-FILE
     =javascript_include_tag :defaults
     =csrf_meta_tag
   %body
-    =yield
+    #page
+      =yield
 FILE
 
 
@@ -109,6 +110,8 @@ File.open('public/stylesheets/sass/_base.scss','a') do |file|
   file.puts '}'
 end
 
+# include formtastic-enum for enum fields in formtastic
+run 'wget http://github.com/leonid-shevtsov/rails_templates/raw/master/lib/formtastic_enum.rb -O config/initializers/formtastic_enum.rb'
 
 # download jquery into javascripts; set up javascript defaults to use jquery
 
@@ -116,8 +119,6 @@ run 'wget http://code.jquery.com/jquery-1.4.2.min.js -O public/javascripts/jquer
 run 'wget http://github.com/rails/jquery-ujs/raw/master/src/rails.js -O public/javascripts/rails.js'
 
 file 'config/initializers/jquery.rb', <<-FILE
-# Switch the javascript_include_tag :defaults to use jquery instead of
-# the default prototype helpers.
 ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['jquery-1.4.2', 'rails'])
 FILE
 
