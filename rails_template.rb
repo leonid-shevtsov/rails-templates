@@ -32,13 +32,6 @@ if yes?('Include the Russian gem?')
   gem 'russian'
 end
 
-# config.ru
-config_ru = File.read('config.ru')
-File.open('config.ru', 'w') do |f|
-  f.puts "require 'etc'\nENV['RAILS_ENV'] = ENV['RACK_ENV']  if !ENV['RAILS_ENV'] && ENV['RACK_ENV']\nENV['BUNDLER_HOME'] = Etc.getpwuid.dir\n\n"
-  f.puts config_ru
-end
-
 # a little cleanup
 
 run 'rm public/index.html'
@@ -125,11 +118,7 @@ run 'wget http://github.com/rails/jquery-ujs/raw/master/src/rails.js -O public/j
 file 'config/initializers/jquery.rb', <<-FILE
 # Switch the javascript_include_tag :defaults to use jquery instead of
 # the default prototype helpers.
-if ActionView::Helpers::AssetTagHelper.const_defined?(:JAVASCRIPT_DEFAULT_SOURCES)
-  ActionView::Helpers::AssetTagHelper.send(:remove_const, "JAVASCRIPT_DEFAULT_SOURCES")
-end
-ActionView::Helpers::AssetTagHelper::JAVASCRIPT_DEFAULT_SOURCES = ['jquery-1.4.2', 'rails']
-ActionView::Helpers::AssetTagHelper::reset_javascript_include_default
+ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['jquery-1.4.2', 'rails'])
 FILE
 
 # redefine default generators
@@ -148,6 +137,7 @@ FILE
 # set up environment
 
 run 'bundle install'
+#run 'bundle lock'
 rake 'db:create'
 
 # prepare a stub controller and view
