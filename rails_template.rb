@@ -8,18 +8,23 @@ gem 'haml', '>= 3'
 # haml template generator
 git :clone => 'git://github.com/psynix/rails3_haml_scaffold_generator.git lib/generators/haml'
 
-gem 'compass'
-gem 'compass-susy-plugin', :require => 'susy'
+if yes?('Include Compass and Susy?')
+  @include_compass = true
+  gem 'compass'
+  gem 'compass-susy-plugin', :require => 'susy'
+end
 
 gem 'authlogic'
 
 # gem 'will_paginate'
-plugin 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
+gem 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
 
 # bleeding edge to support rails 3
 gem 'enumerated_attribute', :git => 'git://github.com/jeffp/enumerated_attribute.git'
 
-gem 'formtastic-rails3', :require => 'formtastic'
+gem 'formtastic', :git => "git://github.com/justinfrench/formtastic.git", :branch => "rails3"
+
+gem 'meta-tags', :require => 'meta_tags'
 
 gem 'exceptional'
 
@@ -84,6 +89,8 @@ file 'app/views/layouts/application.haml', <<-FILE
     /[if IE]
       =stylesheet_link_tag 'ie', :media => 'screen, projection'
 
+    =display_meta_tags :site => '#{@app_name.classify}', :separator => '•', :reverse => true
+
     =javascript_include_tag :defaults
     =csrf_meta_tag
   %body
@@ -97,21 +104,22 @@ FILE
 run 'mkdir public/stylesheets/sass'
 #run 'wget http://github.com/Kilian/sencss/raw/master/minified/sen.min.css -O public/stylesheets/sass/sen.scss'
 
-# include compass with susy
-run 'compass init rails . -r susy -u susy --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
+if @include_compass
+  run 'compass init rails . -r susy -u susy --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
 
-# include formtastic for susy
-run 'wget http://github.com/leonid-shevtsov/formtastic-susy/raw/master/_formtastic.scss -O public/stylesheets/sass/_formtastic.scss'
-File.open('public/stylesheets/sass/_base.scss','a') do |file|
-  file.puts
-  file.puts '@import "formtastic";'
-  file.puts 'form.formtastic {'
-  file.puts '  @include formtastic;'
-  file.puts '}'
+  # include formtastic for susy
+  run 'wget http://github.com/leonid-shevtsov/formtastic-susy/raw/master/_formtastic.scss -O public/stylesheets/sass/_formtastic.scss'
+  File.open('public/stylesheets/sass/_base.scss','a') do |file|
+    file.puts
+    file.puts '@import "formtastic";'
+    file.puts 'form.formtastic {'
+    file.puts '  @include formtastic;'
+    file.puts '}'
+  end
 end
 
 # include formtastic-enum for enum fields in formtastic
-run 'wget http://github.com/leonid-shevtsov/rails_templates/raw/master/lib/formtastic_enum.rb -O config/initializers/formtastic_enum.rb'
+run 'wget http://github.com/leonid-shevtsov/rails-templates/raw/master/lib/formtastic_enum.rb -O config/initializers/formtastic_enum.rb'
 
 # download jquery into javascripts; set up javascript defaults to use jquery
 
@@ -151,7 +159,7 @@ end
 FILE
 
 file 'app/views/main/index.haml', <<-FILE
-%h1 It works!
+%h1=title 'It works!'
 FILE
 
 route 'root :to => "main#index"'
