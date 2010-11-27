@@ -15,21 +15,22 @@ end
 
 gem 'authlogic'
 
-# gem 'will_paginate'
-gem 'will_paginate', :git => 'git://github.com/mislav/will_paginate.git', :branch => 'rails3'
+gem 'will_paginate', '~> 3.0.pre2'
+gem 'enumerated_attribute'
 
-# bleeding edge to support rails 3
-gem 'enumerated_attribute', :git => 'git://github.com/jeffp/enumerated_attribute.git'
-
-gem 'formtastic', :git => "git://github.com/justinfrench/formtastic.git", :branch => "rails3"
+gem 'formtastic', '~> 1.1.0'
 
 gem 'meta-tags', :require => 'meta_tags'
 
 gem 'exceptional'
 
 gem 'rspec-rails', '>= 2.0.0.beta.17', :group => :test
-gem 'cucumber', :group => :test
-gem 'cucumber-rails', :group => :test
+
+if yes?('Include Cucumber?')
+  gem 'cucumber', :group => :test
+  gem 'cucumber-rails', :group => :test
+end
+
 gem 'capybara', :group => :test
 
 if yes?('Include the Russian gem?')
@@ -111,12 +112,12 @@ end
 run 'wget http://github.com/leonid-shevtsov/rails-templates/raw/master/lib/formtastic_enum.rb -O config/initializers/formtastic_enum.rb'
 
 # download jquery into javascripts; set up javascript defaults to use jquery
-
-run 'wget http://code.jquery.com/jquery-1.4.2.min.js -O public/javascripts/jquery-1.4.2.js'
-run 'wget http://github.com/rails/jquery-ujs/raw/master/src/rails.js -O public/javascripts/rails.js'
+run 'mkdir public/javascripts/vendor'
+run 'wget http://code.jquery.com/jquery-1.4.4.min.js -O public/javascripts/vendor/jquery-1.4.4.js'
+run 'wget http://github.com/rails/jquery-ujs/raw/master/src/rails.js -O public/javascripts/vendor/rails.js'
 
 file 'config/initializers/jquery.rb', <<-FILE
-ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['jquery-1.4.2', 'rails'])
+ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['vendor/jquery-1.4.4', 'vendor/rails'])
 FILE
 
 # redefine default generators
@@ -138,7 +139,16 @@ run 'bundle install'
 #run 'bundle lock'
 rake 'db:create'
 
+run 'rails generate formtastic:install'
+
 # prepare a stub controller and view
+run 'mv public/stylesheets/formtastic.css public/stylesheet/sass/_formtastic.scss'
+run 'mv public/stylesheets/formtastic_changes.css public/stylesheet/sass/_formtastic_changes.scss'
+file 'public/stylesheets/sass/screen.scss', <<-FILE
+#{@include_compass ? "@import 'compass/reset';" : ''}
+@include 'formtastic';
+@include 'formtastic_changes';
+FILE
 
 file 'app/controllers/main_controller.rb', <<-FILE
 class MainController < ApplicationController
