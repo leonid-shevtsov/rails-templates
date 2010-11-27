@@ -8,10 +8,9 @@ gem 'haml', '>= 3'
 # haml template generator
 git :clone => 'git://github.com/psynix/rails3_haml_scaffold_generator.git lib/generators/haml'
 
-if yes?('Include Compass and Susy?')
+if yes?('Include Compass?')
   @include_compass = true
   gem 'compass'
-  gem 'compass-susy-plugin', :require => 'susy'
 end
 
 gem 'authlogic'
@@ -105,17 +104,7 @@ run 'mkdir public/stylesheets/sass'
 #run 'wget http://github.com/Kilian/sencss/raw/master/minified/sen.min.css -O public/stylesheets/sass/sen.scss'
 
 if @include_compass
-  run 'compass init rails . -r susy -u susy --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
-
-  # include formtastic for susy
-  run 'wget http://github.com/leonid-shevtsov/formtastic-susy/raw/master/_formtastic.scss -O public/stylesheets/sass/_formtastic.scss'
-  File.open('public/stylesheets/sass/_base.scss','a') do |file|
-    file.puts
-    file.puts '@import "formtastic";'
-    file.puts 'form.formtastic {'
-    file.puts '  @include formtastic;'
-    file.puts '}'
-  end
+  run 'compass init rails . --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
 end
 
 # include formtastic-enum for enum fields in formtastic
