@@ -16,7 +16,7 @@ rails new $APP -skip-prototype --skip-testunit --database=mysql --template=$TEMP
 cd $APP
 
 echo "rvm gemset use $APP" >.rvmrc
-`rvm gemset trust .`
+rvm rvmrc trust .
 
 ruby ../$TEMP_DIR/post_install.rb $APP ../$TEMP_DIR </dev/tty
 
