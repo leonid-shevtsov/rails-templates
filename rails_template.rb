@@ -8,6 +8,8 @@ gem 'haml', '>= 3'
 # haml template generator
 git :clone => 'git://github.com/psynix/rails3_haml_scaffold_generator.git lib/generators/haml'
 
+gem 'jammit'
+
 if yes?('Include Compass?')
   @include_compass = true
   gem 'compass'
@@ -84,14 +86,16 @@ file 'app/views/layouts/application.haml', <<-FILE
 %html
   %head
     %meta{'http-equiv' => 'Content-Type', :content => 'text/html; charset=utf8'}
-    =stylesheet_link_tag 'screen.css', :media => 'screen, projection'
-    =stylesheet_link_tag 'print', :media => 'print'
+    =include_stylesheets :screen, :media => 'screen, projection'
+    =include_stylesheets :print, :media => 'print'
     /[if IE]
-      =stylesheet_link_tag 'ie', :media => 'screen, projection'
+      =include_javascripts :ie, :media => 'screen, projection'
+    /[if IE 6]
+      =include_javascripts :ie6, :media => 'screen, projection'
 
-    =display_meta_tags :site => '#{@app_name.classify}', :separator => '•', :reverse => true
+    =display_meta_tags :site => '#{@app_name.classify}', :separator => '—', :reverse => true
 
-    =javascript_include_tag :defaults
+    =include_javascripts :common
     =csrf_meta_tag
   %body
     #page
@@ -101,24 +105,21 @@ FILE
 
 # sassify!
 
-run 'mkdir public/stylesheets/sass'
+run 'mkdir app/stylesheets'
 #run 'wget http://github.com/Kilian/sencss/raw/master/minified/sen.min.css -O public/stylesheets/sass/sen.scss'
 
 if @include_compass
-  run 'compass init rails . --sass-dir public/stylesheets/sass --css-dir public/stylesheets'
+  run 'compass init rails . --sass-dir app/stylesheets --css-dir public/stylesheets'
 end
 
 # include formtastic-enum for enum fields in formtastic
 run 'curl https://github.com/leonid-shevtsov/rails-templates/raw/master/lib/formtastic_enum.rb --location >config/initializers/formtastic_enum.rb'
 
-# download jquery into javascripts; set up javascript defaults to use jquery
+# download jquery into javascripts
 run 'mkdir public/javascripts/vendor'
-run 'curl http://code.jquery.com/jquery-1.4.4.min.js --location >public/javascripts/vendor/jquery-1.4.4.js'
+run 'curl http://code.jquery.com/jquery-1.4.4.min.js --location >public/javascripts/vendor/jquery.js'
 run 'curl https://github.com/rails/jquery-ujs/raw/master/src/rails.js --location >public/javascripts/vendor/rails.js'
 
-file 'config/initializers/jquery.rb', <<-FILE
-ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['vendor/jquery-1.4.4', 'vendor/rails'])
-FILE
 
 # redefine default generators
 file 'config/initializers/generators_defaults.rb', <<-FILE
@@ -132,21 +133,49 @@ module #{@app_name.classify}
 end
 FILE
 
+# set session store to active_record
+file 'config/initializers/session_store.rb', <<-FILE
+#{@app_name.classify}::Application.config.session_store :active_record_store
+FILE
+
+# set up Jammit
+run 'curl https://github.com/leonid-shevtsov/rails-templates/raw/master/lib/jammit.rake --location >lib/tasks/jammit.rake'
+
+file 'config/assets.yml', <<-FILE
+package_assets: on
+embed_assets: off
+compress_assets: on
+gzip_assets: on
+javascript_compressor: yui
+
+javascripts:
+  common:
+    - public/javascripts/vendor/jquery.js
+    - public/javascripts/vendor/rails.js
+    - public/javascripts/application.js
+
+stylesheets:
+  common:
+    - public/stylesheets/screen.css
+  ie:
+    - public/stylesheets/ie.css
+  ie6:
+    - public/stylesheets/ie6.css
+FILE
 
 # set up environment
 
 run 'bundle install'
-#run 'bundle lock'
 rake 'db:create'
 
-
+rake 'db:sessions:create'
 
 # generate formtastic code
 run 'rails generate formtastic:install'
 
 # prepare a stub controller and view
-run 'mv public/stylesheets/formtastic.css public/stylesheet/sass/_formtastic.scss'
-run 'mv public/stylesheets/formtastic_changes.css public/stylesheet/sass/_formtastic_changes.scss'
+run 'mv public/stylesheets/formtastic.css app/stylesheets/sass/_formtastic.scss'
+run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/sass/_formtastic_changes.scss'
 file 'public/stylesheets/sass/screen.scss', <<-FILE
 #{@include_compass ? "@import 'compass/reset';" : ''}
 @include 'formtastic';

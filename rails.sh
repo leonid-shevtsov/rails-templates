@@ -14,3 +14,6 @@ curl https://github.com/leonid-shevtsov/rails-templates/raw/master/rails_templat
 rails new $APP -skip-prototype --skip-testunit --database=mysql --template=$TEMP_FILENAME </dev/tty
 
 echo "rvm gemset use $APP" >$APP/.rvmrc
+cd $APP && git commit -am "Added rvmrc"
+
+echo "rvm gemset trust $APP"
