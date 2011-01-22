@@ -1,0 +1,5 @@
+---
+- public/index.html
+- public/favicon.ico
+- public/images/*
+- app/views/layouts/application.html.erb

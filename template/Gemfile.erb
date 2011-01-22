@@ -1,0 +1,31 @@
+source :rubygems
+
+gem 'rails', '>=3'
+gem 'mysql2'
+
+gem 'haml', '>=3'
+gem 'haml_rails'
+gem 'jammit'
+<% if CONFIG[:features][:compass] %>
+gem 'compass'
+<% end %>
+gem 'authlogic'
+gem 'will_paginate', '~> 3.0.pre2'
+gem 'enumerated_attribute'
+gem 'formtastic'
+gem 'meta-tags', :require => 'meta_tags'
+gem 'exceptional', :require => 'exceptional'
+<% if CONFIG[:features][:russian] %>
+gem 'russian'
+<% end %>
+
+group :test do
+  gem 'rspec', '~> 2.4'
+  gem 'rspec-rails'
+
+  <% if CONFIG[:features][:cucumber] %>
+  gem 'cucumber'
+  gem 'cucumber-rails'
+  gem 'capybara'
+  <% end %>
+end
