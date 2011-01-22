@@ -58,7 +58,7 @@ end
 
 file 'config/database.yml', <<-FILE
 development:
-  adapter: mysql
+  adapter: mysql2
   encoding: utf8
   reconnect: false
   database: #{@app_name}
@@ -68,7 +68,7 @@ development:
   socket: /var/run/mysqld/mysqld.sock
 
 test:
-  adapter: mysql
+  adapter: mysql2
   encoding: utf8
   reconnect: false
   database: #{@app_name}_test
@@ -139,6 +139,9 @@ run 'bundle install'
 #run 'bundle lock'
 rake 'db:create'
 
+
+
+# generate formtastic code
 run 'rails generate formtastic:install'
 
 # prepare a stub controller and view
