@@ -12,12 +12,13 @@ gem install rails --version ">3"
 
 git clone $SOURCE_REPOSITORY $TEMP_DIR
 rails new $APP -skip-prototype --skip-testunit --database=mysql --template=$TEMP_DIR/rails_template.rb
-cd $APP && ruby ../$TEMP_DIR/post_install.rb $APP ../$TEMP_DIR </dev/tty
 
-pwd
-echo "rvm gemset use $APP" >$APP/.rvmrc
-cd $APP && git add .rvmrc && git commit -m "Added rvmrc"
+cd $APP
 
-echo "rvm gemset trust $APP"
+echo "rvm gemset use $APP" >.rvmrc
+`rvm gemset trust .`
 
-#rm -rf $TEMP_DIR
+ruby ../$TEMP_DIR/post_install.rb $APP ../$TEMP_DIR </dev/tty
+
+cd ..
+rm -rf $TEMP_DIR
