@@ -109,12 +109,12 @@ if @include_compass
 end
 
 # include formtastic-enum for enum fields in formtastic
-run 'wget http://github.com/leonid-shevtsov/rails-templates/raw/master/lib/formtastic_enum.rb -O config/initializers/formtastic_enum.rb'
+run 'curl https://github.com/leonid-shevtsov/rails-templates/raw/master/lib/formtastic_enum.rb --location >config/initializers/formtastic_enum.rb'
 
 # download jquery into javascripts; set up javascript defaults to use jquery
 run 'mkdir public/javascripts/vendor'
-run 'wget http://code.jquery.com/jquery-1.4.4.min.js -O public/javascripts/vendor/jquery-1.4.4.js'
-run 'wget http://github.com/rails/jquery-ujs/raw/master/src/rails.js -O public/javascripts/vendor/rails.js'
+run 'curl http://code.jquery.com/jquery-1.4.4.min.js --location >public/javascripts/vendor/jquery-1.4.4.js'
+run 'curl https://github.com/rails/jquery-ujs/raw/master/src/rails.js --location >public/javascripts/vendor/rails.js'
 
 file 'config/initializers/jquery.rb', <<-FILE
 ActionView::Helpers::AssetTagHelper.register_javascript_expansion(:defaults => ['vendor/jquery-1.4.4', 'vendor/rails'])
