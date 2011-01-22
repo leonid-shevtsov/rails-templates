@@ -38,16 +38,16 @@ end
         exit
       end
     else
-      puts "mkdir #{new_path}"
+      puts " mkdir #{new_path}"
       `mkdir #{new_path}`
     end
   else
     if filename =~ /\.erb$/
       new_path.gsub!(/\.erb$/,'')
-      puts "erb #{new_path}"
+      puts "    erb #{new_path}"
       contents = ERB.new(File.read(filename)).result
     else
-      puts "file #{new_path}"
+      puts "  file #{new_path}"
       contents = File.read(filename)
     end
     File.open(new_path, 'w') {|f| f.write contents}
