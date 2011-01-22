@@ -155,7 +155,7 @@ javascripts:
     - public/javascripts/application.js
 
 stylesheets:
-  common:
+  screen:
     - public/stylesheets/screen.css
   ie:
     - public/stylesheets/ie.css
@@ -174,8 +174,8 @@ rake 'db:sessions:create'
 run 'rails generate formtastic:install'
 
 # prepare a stub controller and view
-run 'mv public/stylesheets/formtastic.css app/stylesheets/sass/_formtastic.scss'
-run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/sass/_formtastic_changes.scss'
+run 'mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss'
+run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss'
 file 'public/stylesheets/sass/screen.scss', <<-FILE
 #{@include_compass ? "@import 'compass/reset';" : ''}
 @include 'formtastic';
