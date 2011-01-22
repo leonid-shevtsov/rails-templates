@@ -17,3 +17,12 @@ Rails template - the way it should be.
 * Authlogic
 * WillPaginate
 * MetaTags
+
+## Requirements
+
+* Git (duh)
+* `curl`
+* An installed RVM
+
+
+2011, Leonid Shevtsov
