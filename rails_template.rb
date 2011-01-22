@@ -89,9 +89,9 @@ file 'app/views/layouts/application.haml', <<-FILE
     =include_stylesheets :screen, :media => 'screen, projection'
     =include_stylesheets :print, :media => 'print'
     /[if IE]
-      =include_javascripts :ie, :media => 'screen, projection'
+      =include_stylesheets :ie, :media => 'screen, projection'
     /[if IE 6]
-      =include_javascripts :ie6, :media => 'screen, projection'
+      =include_stylesheets :ie6, :media => 'screen, projection'
 
     =display_meta_tags :site => '#{@app_name.classify}', :separator => '—', :reverse => true
 
