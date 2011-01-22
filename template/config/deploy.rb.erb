@@ -1,0 +1,53 @@
+# RVM
+$:.unshift(File.expand_path('./lib', ENV['rvm_path'])) # Add RVM's lib directory to the load path.
+require "rvm/capistrano"                  # Load RVM's capistrano plugin.
+set :rvm_ruby_string, '<%=CONFIG[:capistrano][:rvm_ruby_string]%>'
+
+# Bundler
+require 'bundler/capistrano'
+
+set :user, '<%=CONFIG[:capistrano][:user]%>'
+set :application, '<%=CONFIG[:app_name]%>'
+set :deploy_to, '/home/<%=CONFIG[:capistrano][:user]%>/www/<%=CONFIG[:app_name]%>'
+set :repository, '<%=CONFIG[:capistrano][:repository]%>'
+set :scm, :git
+set :branch, 'master'
+
+set :deploy_via, :remote_cache
+
+role :web, '<%=CONFIG[:capistrano][:server]%>', :primary => true
+role :app, '<%=CONFIG[:capistrano][:server]%>', :primary => true
+role :db, '<%=CONFIG[:capistrano][:server]%>', :primary => true
+
+default_run_options[:pty] = true
+
+namespace :deploy do
+  task :start do ; end
+  task :stop do ; end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{release_path}/tmp/restart.txt"
+  end
+
+  desc "Make symlinks"
+  task :update_symlinks do
+    ['database.yml'].each do |filename|
+      run "ln -fs #{shared_path}/config/#{filename} #{release_path}/config/#{filename}"
+    end
+
+    ['tmp'].each do |dir|
+      run "ln -fs #{deploy_to}/#{shared_dir}/#{dir} #{release_path}/#{dir}"
+    end
+  end
+
+  task :trust_rvmrc do
+    run "rvm rvmrc trust #{release_path}"
+  end
+  
+  task :jammit do
+    run "cd #{release_path} && rake jammit:build RAILS_ENV=production"
+  end
+end
+
+after "deploy:update_code", "deploy:update_symlinks"
+after "deploy:update_code", "deploy:trust_rvmrc" 
+after "deploy:update_code", "deploy:jammit"

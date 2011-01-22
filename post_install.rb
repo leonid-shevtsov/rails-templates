@@ -7,6 +7,12 @@ def yes?(prompt)
   return ['Y','y','yes',''].include?(STDIN.gets.strip)
 end
 
+def prompt(prompt, default='')
+  print "#{prompt} [#{default}]:"
+  result = STDIN.gets.strip
+  result=='' ? default : result
+end
+
 FEATURES = %w(compass cucumber russian)
 
 TEMPLATE_PATH = ARGV[1]
@@ -14,10 +20,22 @@ TEMPLATE_PATH = ARGV[1]
 CONFIG = {
   :app_name => ARGV[0],
   :app_module_name => ARGV[0].gsub(/(^|_)(\w)/) {|m| $2.upcase},
-  :features => {}
+  :features => {},
 }
 
+CONFIG[:capistrano] = {
+  :rvm_ruby_string => `rvm list default string`.strip+'@'+CONFIG[:app_name],
+  :user => 'USER',
+  :repository => 'REPOSITORY_URL',
+  :server => 'SERVER'
+}
+
+
 FEATURES.each {|f| CONFIG[:features][f.to_sym] = yes?("Include #{f}?")}
+
+CONFIG[:capistrano].keys.each do |key|
+  CONFIG[:capistrano][key] = prompt("Capistrano #{key}", CONFIG[:capistrano][key])
+end
 
 # a little cleanup
 `mv config/database.yml config/database.yml.sample`
@@ -73,10 +91,6 @@ end
 `bundle exec rails generate formtastic:install`
 `mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss`
 `mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss`
-
-# capistrano
-# TODO add a default deploy.rb
-`bundle exec capify .`
 
 # test harness
 `bundle exec rails generate rspec:install`
