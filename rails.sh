@@ -3,7 +3,7 @@
 APP=$1
 TEMP_FILENAME="rails_template.$$.rb"
 
-exec </dev/tty
+exec 0</dev/tty
 
 rvm gemset create $APP
 rvm gemset use $APP
