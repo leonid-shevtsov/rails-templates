@@ -164,11 +164,16 @@ stylesheets:
 FILE
 
 # set up environment
+if ENV['MY_RUBY_HOME']  # rvmrc
+  run 'curl https://github.com/leonid-shevtsov/rails-templates/raw/master/lib/setup_load_paths.rb --location >config/setup_load_paths.rb'
+end
+
 
 run 'bundle install'
 rake 'db:create'
 
 rake 'db:sessions:create'
+rake 'db:migrate'
 
 # generate formtastic code
 run 'rails generate formtastic:install'
