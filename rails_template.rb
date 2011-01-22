@@ -157,6 +157,8 @@ javascripts:
 stylesheets:
   screen:
     - public/stylesheets/screen.css
+  print:
+    - public/stylesheets/print.css
   ie:
     - public/stylesheets/ie.css
   ie6:
