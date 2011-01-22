@@ -1,15 +1,19 @@
-I'll add my Rails templates here.
+Rails template - the way it should be.
 
-Not sure if these will be any use to anyone except me (or except as examples).
-
-To use this, run
+## Usage
 
     bash -s < <( curl https://github.com/leonid-shevtsov/rails-templates/raw/master/rails.sh ) yourapp
 
 ## Contents
 
+* RVM compatibility out-of-the-box
 * Rails 3 with MySQL
+* Haml by default
+* RSpec + Cucumber test harness by default
+* jQuery by default
 * Formtastic
 * Compass (optional)
-*
-* RSpec + Cucumber test harness
+* Jammit, ready to package your assets
+* Authlogic
+* WillPaginate
+* MetaTags

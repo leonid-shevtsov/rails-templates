@@ -76,13 +76,13 @@ end
 
 # capistrano
 # TODO add a default deploy.rb
-run 'capify .'
+`bundle exec capify .`
 
 # test harness
-`rails generate rspec:install`
+`bundle exec rails generate rspec:install`
 
 if CONFIG[:features][:cucumber]
-  `rails generate cucumber:install --rspec --capybara`
+  `bundle exec rails generate cucumber:install --rspec --capybara`
 end
 
 # Done! Let's get this all under version control
