@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SOURCE_REPOSITORY="git://github.com/leonid-shevtsov/rails-templates.git'"
+SOURCE_REPOSITORY="git://github.com/leonid-shevtsov/rails-templates.git"
 APP=$1
 TEMP_DIR="rails_template.$$"
 
