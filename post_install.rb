@@ -8,7 +8,7 @@ def yes?(prompt)
 end
 
 def prompt(prompt, default='')
-  print "#{prompt} [#{default}]:"
+  print "#{prompt} [#{default}]: "
   result = STDIN.gets.strip
   result=='' ? default : result
 end
