@@ -24,5 +24,8 @@ Rails template - the way it should be.
 * `curl`
 * An installed RVM
 
+## TODO
+
+* Rewriting the whole system as rake tasks seems reasonable
 
 2011, Leonid Shevtsov
