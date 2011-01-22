@@ -54,37 +54,38 @@ end
   end
 end
 
-exit
-
-if @include_compass
-  run 'compass init rails . --sass-dir app/stylesheets --css-dir public/stylesheets'
+# Download external dependencies
+YAML.load_file(File.join(TEMPLATE_PATH, 'external.yml')).each do |filename, source|
+  `curl #{source} --location >#{filename}`
 end
 
-# download jquery into javascripts
-run 'curl http://code.jquery.com/jquery-1.4.4.min.js --location >public/javascripts/vendor/jquery.js'
-run 'curl https://github.com/rails/jquery-ujs/raw/master/src/rails.js --location >public/javascripts/vendor/rails.js'
+# All right! Ready to run some scripts
 
-run 'bundle install'
-rake 'db:create'
+`bundle install`
+`rake db:sessions:create`
+`rake db:migrate:reset`
 
-rake 'db:sessions:create'
-rake 'db:migrate'
+if CONFIG[:features][:compass]
+  `bundle exec compass init rails . --sass-dir app/stylesheets --css-dir public/stylesheets`
+end
 
 # generate formtastic code
-run 'rails generate formtastic:install'
-
-# prepare a stub controller and view
-run 'mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss'
-run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss'
-
+`bundle exec rails generate formtastic:install`
+`mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss`
+`mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss`
 
 # capistrano
+# TODO add a default deploy.rb
 run 'capify .'
 
 # test harness
-generate 'rspec:install'
-generate 'cucumber:install', '--rspec --capybara'
+`rails generate rspec:install`
 
-git :init
-git :add => '.'
-git :commit => '-am "Initial commit"'
+if CONFIG[:features][:cucumber]
+  `rails generate cucumber:install --rspec --capybara`
+end
+
+# Done! Let's get this all under version control
+`git init`
+`git add .`
+`git commit -am "Initial commit"`
