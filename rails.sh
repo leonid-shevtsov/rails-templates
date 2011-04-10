@@ -4,8 +4,7 @@ SOURCE_REPOSITORY="git://github.com/leonid-shevtsov/rails-templates.git"
 APP=$1
 TEMP_DIR="rails_template.$$"
 
-rvm gemset create $APP
-rvm gemset use $APP
+rvm gemset use $APP --create
 
 gem install bundler
 gem install rails --version ">3"
@@ -17,6 +16,7 @@ cd $APP
 
 echo "rvm gemset use $APP" >.rvmrc
 rvm rvmrc trust .
+rvm gemset use $APP
 
 ruby ../$TEMP_DIR/post_install.rb $APP ../$TEMP_DIR </dev/tty
 
