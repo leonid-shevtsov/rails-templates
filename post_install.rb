@@ -14,7 +14,7 @@ def prompt(prompt, default='')
 end
 
 def run(command)
-  "print -- running #{command}"
+  puts "-- running #{command}"
   system command
 end
 
