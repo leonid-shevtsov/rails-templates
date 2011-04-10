@@ -97,7 +97,9 @@ run 'mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss'
 run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss'
 
 # test harness
-run 'bundle exec rails generate rspec:install'
+run 'bundle exec rails generate rspec:install --skip'
 
 # Done! Let's get this all under version control
 run 'git init'
+run 'git add .'
+run 'git commit -am "Initial commit"'
