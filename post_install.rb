@@ -83,8 +83,6 @@ YAML.load_file(File.join(TEMPLATE_PATH, 'external.yml')).each do |filename, sour
 end
 
 # All right! Ready to run some scripts
-run 'rvm info'
-exit
 run 'bundle install'
 run 'rake db:sessions:create'
 run 'rake db:migrate:reset'
