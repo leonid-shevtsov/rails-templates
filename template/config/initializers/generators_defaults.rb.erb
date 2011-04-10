@@ -1,6 +1,4 @@
-module <%=CONFIG[:app_module_name]%>
-  class Application
-    config.generators do |generator|
+Rails.application.config.generators do |generator|
       generator.test_framework :rspec
       generator.template_engine :haml
     end

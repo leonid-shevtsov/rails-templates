@@ -7,14 +7,13 @@ Rails template - the way it should be.
 ## Contents
 
 * RVM compatibility out-of-the-box
-* Rails 3 with MySQL
+* Rails 3 with MySQL; strict mode enabled
 * Haml by default
-* RSpec + Cucumber test harness by default
+* RSpec test harness by default, with FactoryGirl, Capybara+Selenium, etc
 * jQuery by default
 * Formtastic
 * Compass (optional)
 * Jammit, ready to package your assets
-* Authlogic
 * WillPaginate
 * MetaTags
 

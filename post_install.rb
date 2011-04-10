@@ -13,7 +13,7 @@ def prompt(prompt, default='')
   result=='' ? default : result
 end
 
-FEATURES = %w(compass cucumber russian)
+FEATURES = %w(compass russian)
 
 TEMPLATE_PATH = ARGV[1]
 

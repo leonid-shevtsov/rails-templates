@@ -11,23 +11,44 @@ gem 'jammit'
 <% if CONFIG[:features][:compass] %>
 gem 'compass'
 <% end %>
-gem 'authlogic'
 gem 'will_paginate', '~> 3.0.pre2'
 gem 'enumerated_attribute'
 gem 'formtastic'
 gem 'meta-tags', :require => 'meta_tags'
-gem 'exceptional', :require => 'exceptional'
+gem 'hoptoad_notifier'
 <% if CONFIG[:features][:russian] %>
 gem 'russian'
 <% end %>
+gem 'rails_db_dump'
 
-group :test do
+group :development, :test do
+  # Test framework
   gem 'rspec', '~> 2.4'
   gem 'rspec-rails'
 
-  <% if CONFIG[:features][:cucumber] %>
-  gem 'cucumber'
-  gem 'cucumber-rails'
-  gem 'capybara'
-  <% end %>
+  # Database population
+  gem 'ffaker'
+end
+
+group :test do
+  # Database cleanup
+  gem 'database_cleaner'
+
+  # Factories
+  gem 'factory_girl_rails'
+  
+  # Code Coverage
+  gem 'rcov'
+
+  # Faster tests
+  gem 'spork'
+
+  # Mock web requests
+  gem 'webmock', :git => 'git://github.com/leonid-shevtsov/webmock.git'
+
+  # Acceptance testing 
+  gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
+  gem 'headless'
+  gem 'selenium-webdriver'
+  gem 'mongrel'
 end

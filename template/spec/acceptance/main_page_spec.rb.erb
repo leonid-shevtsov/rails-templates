@@ -1,0 +1,8 @@
+require 'acceptance/acceptance_helper'
+
+feature 'Main page' do
+  scenario 'User visits main page' do
+    visit '/'
+    page.should have_content('<%=CONFIG[:app_module_name]%>')
+  end
+end
