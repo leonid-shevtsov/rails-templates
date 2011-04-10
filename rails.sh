@@ -16,7 +16,6 @@ cd $APP
 
 echo "rvm gemset use $APP" >.rvmrc
 rvm rvmrc trust .
-rvm gemset use $APP
 
 ruby ../$TEMP_DIR/post_install.rb $APP ../$TEMP_DIR </dev/tty
 
