@@ -13,6 +13,11 @@ def prompt(prompt, default='')
   result=='' ? default : result
 end
 
+def run(command)
+  "print -- running #{command}"
+  system command
+end
+
 FEATURES = %w(compass russian)
 
 TEMPLATE_PATH = ARGV[1]
@@ -38,9 +43,9 @@ CONFIG[:capistrano].keys.each do |key|
 end
 
 # a little cleanup
-`mv config/database.yml config/database.yml.sample`
+system 'mv config/database.yml config/database.yml.sample'
 YAML.load_file(File.join(TEMPLATE_PATH, 'files_to_remove.yml')).each do |filename|
-  `rm -rf #{filename}`
+  run "rm -rf #{filename}"
 end
 
 # copy over files from the template
@@ -62,7 +67,7 @@ end
   else
     if filename =~ /\.erb$/
       new_path.gsub!(/\.erb$/,'')
-      puts "    erb #{new_path}"
+      puts "   erb #{new_path}"
       contents = ERB.new(File.read(filename)).result
     else
       puts "  file #{new_path}"
@@ -74,32 +79,26 @@ end
 
 # Download external dependencies
 YAML.load_file(File.join(TEMPLATE_PATH, 'external.yml')).each do |filename, source|
-  `curl #{source} --location >#{filename}`
+  run "curl #{source} --location >#{filename}"
 end
 
 # All right! Ready to run some scripts
 
-`bundle install`
-`rake db:sessions:create`
-`rake db:migrate:reset`
+run 'bundle install'
+run 'rake db:sessions:create'
+run 'rake db:migrate:reset'
 
 if CONFIG[:features][:compass]
-  `bundle exec compass init rails . --sass-dir app/stylesheets --css-dir public/stylesheets`
+  run 'bundle exec compass init rails . --sass-dir app/stylesheets --css-dir public/stylesheets'
 end
 
 # generate formtastic code
-`bundle exec rails generate formtastic:install`
-`mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss`
-`mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss`
+run 'bundle exec rails generate formtastic:install'
+run 'mv public/stylesheets/formtastic.css app/stylesheets/_formtastic.scss'
+run 'mv public/stylesheets/formtastic_changes.css app/stylesheets/_formtastic_changes.scss'
 
 # test harness
-`bundle exec rails generate rspec:install`
-
-if CONFIG[:features][:cucumber]
-  `bundle exec rails generate cucumber:install --rspec --capybara`
-end
+run 'bundle exec rails generate rspec:install'
 
 # Done! Let's get this all under version control
-`git init`
-`git add .`
-`git commit -am "Initial commit"`
+run 'git init'
