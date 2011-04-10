@@ -11,7 +11,7 @@ gem install bundler
 gem install rails --version ">3"
 
 git clone $SOURCE_REPOSITORY $TEMP_DIR
-rails new $APP -skip-prototype --skip-testunit --database=mysql --template=$TEMP_DIR/rails_template.rb
+rails new $APP --skip-prototype --skip-test-unit --database=mysql --template=$TEMP_DIR/rails_template.rb
 
 cd $APP
 
